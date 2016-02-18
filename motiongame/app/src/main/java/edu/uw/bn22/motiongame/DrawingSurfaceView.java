@@ -1,4 +1,4 @@
-package edu.uw.motiondemo;
+package edu.uw.bn22.motiongame;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -28,7 +28,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private Thread mThread; //the background thread
 
     private Paint redPaint; //drawing variables (pre-defined for speed)
-
+    private Paint bluePaint;
 
     /**
      * We need to override all the constructors, since we don't know which will be called
@@ -55,6 +55,9 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         //set up drawing variables ahead of timme
         redPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         redPaint.setColor(Color.RED);
+
+        bluePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        bluePaint.setColor(Color.BLUE);
     }
 
 
@@ -64,6 +67,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     public void update(){
         //update the "game state" here (move things around, etc.
         //TODO: fill in your own logic here!
+
     }
 
 
@@ -78,16 +82,19 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
         canvas.drawColor(Color.BLACK); //black out the background
         canvas.drawCircle(viewWidth/2.0f, viewHeight/2.0f, 100.0f, redPaint); //we can draw directly onto the canvas
-        //see http://developer.android.com/reference/android/graphics/Canvas.html for a list of options
 
-        for(int x=50; x<viewWidth-50; x++) { //most of the width
+        for (int i = 0; i < 10; i++) {
+            canvas.drawCircle(viewWidth/2.0f, viewHeight/1.5f, 50.0f, bluePaint);
+        }
+
+        /*for(int x=50; x<viewWidth-50; x++) { //most of the width
             for(int y=100; y<110; y++) { //10 pixels high
                 bmp.setPixel(x, y, Color.BLUE); //we can also set individual pixels in a Bitmap (like a BufferedImage)
             }
-        }
+        }*/
         //Canvas bmc = new Canvas(bmp); //we can also make a canvas out of a Bitmap to draw on that (like fetching g2d from a BufferedImage)
 
-        canvas.drawBitmap(bmp,0,0,null); //and then draw the BitMap onto the canvas.
+        //canvas.drawBitmap(bmp,0,0,null); //and then draw the BitMap onto the canvas.
     }
 
 
