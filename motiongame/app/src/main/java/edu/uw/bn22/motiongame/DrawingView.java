@@ -24,8 +24,6 @@ public class DrawingView extends View {
 
     //drawing values
     private Paint redPaint; //drawing variables (pre-defined for speed)
-    public Ball ball;
-
 
 
     /**
@@ -48,6 +46,7 @@ public class DrawingView extends View {
         //set up drawing variables ahead of timme
         redPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         redPaint.setColor(Color.RED);
+
     }
 
     /**
@@ -63,33 +62,18 @@ public class DrawingView extends View {
 
         //create a properly-sized bitmap to draw on
         bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
-
-        ball = new Ball(viewWidth/2, viewHeight/2, 100);
-
     }
 
     /**
      * Override this method to specify drawing. It is like our "paintComponent()" method.
      */
     @Override
-    public void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas)
+    {
         super.onDraw(canvas); //make sure to have the parent do any drawing it is supposed to!
 
-        ball.cy += 3;
-
         canvas.drawColor(Color.BLACK); //black out the background
-
-        canvas.drawCircle(ball.cx, ball.cy, ball.radius, redPaint); //we can draw directly onto the canvas
-
-        for (int x = 50; x < viewWidth - 50; x++) { //most of the width
-            for (int y = 100; y < 110; y++) { //10 pixels high
-                bmp.setPixel(x, y, Color.BLUE); //we can also set individual pixels in a Bitmap (like a BufferedImage)
-            }
-        }
-        canvas.drawBitmap(bmp, 0, 0, null); //and then draw the BitMap onto the canvas.
-        //Canvas bmc = new Canvas(bmp); //we can also make a canvas out of a Bitmap to draw on that (like fetching g2d from a BufferedImage)
-
-        invalidate();
+        canvas.drawCircle(viewWidth/2, viewHeight/2, 100f, redPaint); //we can draw directly onto the canvas
     }
 
 }

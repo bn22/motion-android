@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.Random;
+
 /**
  * An example SurfaceView for generating graphics on
  * @author Joel Ross
@@ -28,9 +30,14 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private Thread mThread; //the background thread
 
     private Paint redPaint; //drawing variables (pre-defined for speed)
+    private Paint bluePaint;
+    private Paint greenPaint;
 
-    //the Ball; public for allowing interactions
-    public Ball player;
+    public Ball ball;
+    public int count = 0;
+
+    public float a;
+    public float b;
 
     /**
      * We need to override all the constructors, since we don't know which will be called
@@ -58,43 +65,43 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         redPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         redPaint.setColor(Color.RED);
 
-        //The Ball
-        player = new Ball(100,100,100);
+        ball = new Ball(100, 100, 100);
     }
 
 
     /**
-     * Helper method for the "animation loop"
+     * Helper method for the "game loop"
      */
     public void update(){
-
-        player.cx += player.dx; //move
-        player.cy += player.dy;
+        //update the "game state" here (move things around, etc.
+        //TODO: fill in your own logic here!
+        ball.cx += ball.dx;
+        ball.cy += ball.dy;
 
         //slow down
-        player.dx *= 0.99;
-        player.dy *= 0.99;
+        ball.dx *= 0.99;
+        ball.dy *= 0.99;
 
-//        if(player.dx < 1) player.dx = 0;
-//        if(player.dy < 1) player.dy = 0;
+//        if(ball.dx < 1) ball.dx = 0;
+//        if(ball.dy < 1) ball.dy = 0;
 
 
         /* hit detection */
-        if(player.cx + player.radius > viewWidth) { //left bound
-            player.cx = viewWidth - player.radius;
-            player.dx *= -1;
+        if(ball.cx + ball.radius > viewWidth) { //left bound
+            ball.cx = viewWidth - ball.radius;
+            ball.dx *= -1;
         }
-        else if(player.cx - player.radius < 0) { //right bound
-            player.cx = player.radius;
-            player.dx *= -1;
+        else if(ball.cx - ball.radius < 0) { //right bound
+            ball.cx = ball.radius;
+            ball.dx *= -1;
         }
-        else if(player.cy + player.radius > viewHeight) { //bottom bound
-            player.cy = viewHeight - player.radius;
-            player.dy *= -1;
+        else if(ball.cy + ball.radius > viewHeight) { //bottom bound
+            ball.cy = viewHeight - ball.radius;
+            ball.dy *= -1;
         }
-        else if(player.cy - player.radius < 0) { //top bound
-            player.cy = player.radius;
-            player.dy *= -1;
+        else if(ball.cy - ball.radius < 0) { //top bound
+            ball.cy = ball.radius;
+            ball.dy *= -1;
         }
     }
 
@@ -105,15 +112,40 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
      */
     public void render(Canvas canvas){
         if(canvas == null) return; //if we didn't get a valid canvas for whatever reason
+        Random r = new Random();
+        if (count == 0) {
+            a = r.nextFloat() * 4f;
+            b = r.nextFloat() * 4f;
+        }
+        count = count + 1;
+        //TODO: replace the below example with your own rendering
 
         canvas.drawColor(Color.BLACK); //black out the background
+        canvas.drawCircle(viewWidth / 2.0f, viewHeight / 2.0f, 100.0f, redPaint); //we can draw directly onto the canvas
+        canvas.drawCircle(viewWidth / a, viewHeight / b, 25.0f, redPaint); //we can draw directly onto the canvas
 
-        canvas.drawCircle(player.cx, player.cy, player.radius, redPaint); //we can draw directly onto the canvas
+        if (count == 60) {
+            int min = 40;
+            int maxHeight = viewHeight - 40;
+            int maxWidth = viewWidth - 40;
+            int w = r.nextInt(maxWidth - min) + min;
+            int h = r.nextInt(maxHeight - min) + min;
+
+            for (int x = w; x < w + 40; x++) { //most of the width
+                for (int y = h; y < h + 40; y++) { //10 pixels high
+                    bmp.setPixel(x, y, Color.BLUE); //we can also set individual pixels in a Bitmap (like a BufferedImage)
+                }
+            }
+            count = 0;
+        }
+        canvas.drawBitmap(bmp, 0, 0, redPaint);
+
     }
 
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+
         // create thread only; it's started in surfaceCreated()
         Log.v(TAG, "making new thread");
         mThread = new Thread(mRunnable);
@@ -127,10 +159,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         synchronized (mHolder) { //synchronized to keep this stuff atomic
             viewWidth = width;
             viewHeight = height;
-            bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888); //new buffer to draw on 
-
-            //Remake player
-            player = new Ball(viewWidth/2, viewHeight/2, 100);
+            bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888); //new buffer to draw on
         }
     }
 
