@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
@@ -46,6 +48,8 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     public float b;
     public float c;
     public float d;
+    public float height;
+    public float width;
 
     /**
      * We need to override all the constructors, since we don't know which will be called
@@ -104,33 +108,24 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         /* hit detection */
         if(player.cx + player.radius > viewWidth) { //left bound
             player.cx = viewWidth - player.radius;
+            player.dx *= -0.01;
         }
         else if(player.cx - player.radius < 0) { //right bound
             player.cx = player.radius;
+            player.dx *= -0.01;
         }
         else if(player.cy + player.radius > viewHeight) { //bottom bound
             player.cy = viewHeight - player.radius;
+            player.dy *= -0.01;
         }
         else if(player.cy - player.radius < 0) { //top bound
             player.cy = player.radius;
+            player.dy *= -0.01;
         }
 
         for (int i = 0; i < ballArray.size(); i++) {
-            int a = (int) Math.ceil(player.cx); //+ (int) Math.ceil(player.radius) ;
-            int b = (int) Math.ceil(ballArray.get(i).cx); //+ (int) Math.ceil(ballArray.get(i).radius);
-            int c = (int) Math.ceil(player.cy); //+ (int) Math.ceil(player.radius);
-            int d = (int) Math.ceil(ballArray.get(i).cy); //+ (int) Math.ceil(ballArray.get(i).radius);
-            if (a + 3 > b) {
-                Log.v(TAG, "First");
-                if (a - 3 <= b) {
-                    Log.v(TAG, "Second");
-                    if (c + 3 > d) {
-                        Log.v(TAG, "Third");
-                        if (c - 3 <= d) {
-                            Log.v(TAG, "Fourth");
-                        }
-                    }
-                }
+            if ((player.cx - player.radius - ballArray.get(i).cx - ballArray.get(i).radius) < 0 && (player.cy - player.radius - ballArray.get(i).cy - ballArray.get(i).radius < 0)) {
+                //Log.v(TAG, "hi");
             }
         }
     }
@@ -147,6 +142,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         //TODO: replace the below example with your own rendering
         canvas.drawColor(Color.BLACK); //black out the background
         canvas.drawCircle(player.cx, player.cy, player.radius, bluePaint); //we can draw directly onto the canvas
+        canvas.drawRect(0f, height, width, height - 20f, redPaint);
         for(int i = 0; i < ballArray.size(); i++) {
             canvas.drawCircle(ballArray.get(i).cx, ballArray.get(i).cy, ballArray.get(i).radius, redPaint);
         }

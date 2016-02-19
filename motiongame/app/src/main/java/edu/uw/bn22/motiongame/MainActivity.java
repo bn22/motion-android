@@ -61,6 +61,8 @@ public class MainActivity extends Activity implements SensorEventListener{
         display.getSize(size);
         width =(float)size.x;
         height = (float)size.y;
+        view.height = height;
+        view.width = width;
 
         //Starts the game with 15 enemies
         for (int i = 0; i < 15; i++) {
@@ -153,6 +155,8 @@ public class MainActivity extends Activity implements SensorEventListener{
                 Log.v(TAG, "Finger up!");
                 float x = r.nextFloat() * (width - 0f);
                 float y = r.nextFloat() * (height - 100f) + 100f;
+                Log.v(TAG, String.valueOf(x));
+                Log.v(TAG, String.valueOf(y));
                 while (x - 15f < 0f || x + 15f > width || y - 15f < 100f || y + 15f > width) {
                     x = r.nextFloat() * (height - 0f);
                     y = r.nextFloat() * (width - 100f) + 100f;
