@@ -39,8 +39,8 @@ public class MainActivity extends Activity implements SensorEventListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Initializes the motion and gesture trackers, sound ppo and drawing surface
         view = (DrawingSurfaceView)findViewById(R.id.drawingView);
-
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -49,6 +49,7 @@ public class MainActivity extends Activity implements SensorEventListener{
         }
         initializeSoundPool();
 
+        //Creates a listening for a button that starts the game
         Button start = (Button)findViewById(R.id.start);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +64,7 @@ public class MainActivity extends Activity implements SensorEventListener{
         });
     }
 
+    //Full screens the application
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -77,6 +79,7 @@ public class MainActivity extends Activity implements SensorEventListener{
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);}
     }
 
+    //Initializes sounds so it can be played during the game
     @SuppressWarnings("deprecation")
     private void initializeSoundPool(){
         final int MAX_STREAMS = 4;
@@ -118,12 +121,14 @@ public class MainActivity extends Activity implements SensorEventListener{
         soundIds[4] = mSoundPool.load(this, R.raw.saber_swing4, 0);
     }
 
+    //Creates a method that can be called to play sounds
     public void playSound(int index){
         if(loadedSound[index]){
             mSoundPool.play(soundIds[index],1,1,1,0,1);
         }
     }
 
+    //Handles touch control from the user
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         Log.v(TAG, "" + event);
@@ -156,6 +161,7 @@ public class MainActivity extends Activity implements SensorEventListener{
         }
     }
 
+    //Restarts the sensor to track movement
     @Override
     protected void onResume() {
         //register sensor
@@ -163,6 +169,7 @@ public class MainActivity extends Activity implements SensorEventListener{
         super.onResume();
     }
 
+    //Stops the sensor to track movement when the user puts this app in the background
     @Override
     protected void onPause() {
         //unregister sensor
@@ -170,6 +177,7 @@ public class MainActivity extends Activity implements SensorEventListener{
         super.onPause();
     }
 
+    //
     @Override
     public void onSensorChanged(SensorEvent event) {
         if(Math.abs(event.values[0]) > 2.0){
@@ -189,6 +197,7 @@ public class MainActivity extends Activity implements SensorEventListener{
 
     }
 
+    //Listens for gesture inputs from the user
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
@@ -209,16 +218,4 @@ public class MainActivity extends Activity implements SensorEventListener{
             return true; //we got this
         }
     }
-
-    //starter pseudo-example
-    class MyScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            detector.getScaleFactor();
-
-            return super.onScale(detector);
-        }
-    }
-
 }
