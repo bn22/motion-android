@@ -81,11 +81,10 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         greenPaint.setColor(Color.GREEN);
         yellowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         yellowPaint.setColor(Color.YELLOW);
-        player = new Ball(75, 75, 75);
-        avoid = new Ball(75, 75, 50);
-        collect = new Ball(25, 25, 50);
+        player = new Ball(75, 75, 50);
+        avoid = new Ball(75, 75, 25);
+        collect = new Ball(25, 25, 25);
     }
-
 
     /**
      * Helper method for the "game loop"
@@ -157,10 +156,10 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         canvas.drawColor(Color.BLACK); //black out the background
         canvas.drawCircle(player.cx, player.cy, player.radius, bluePaint); //we can draw directly onto the canvas
         for (int i = 0; i < avoidArray.size(); i++) {
-            canvas.drawCircle(avoidArray.get(i).cx, avoidArray.get(i).cy, 50, redPaint); //we can draw directly onto the canvas
+            canvas.drawCircle(avoidArray.get(i).cx, avoidArray.get(i).cy, 25, redPaint); //we can draw directly onto the canvas
         }
         for (int j = 0; j < collectArray.size(); j++) {
-            canvas.drawCircle(collectArray.get(j).cx, collectArray.get(j).cy, 50, yellowPaint); //we can draw directly onto the canvas
+            canvas.drawCircle(collectArray.get(j).cx, collectArray.get(j).cy, 25, yellowPaint); //we can draw directly onto the canvas
         }
         canvas.drawBitmap(bmp, 0, 0, null);
     }
@@ -183,7 +182,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             viewHeight = height;
             bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888); //new buffer to draw on
 
-            player = new Ball(viewWidth / 2, viewHeight / 2, 100);
+            player = new Ball(viewWidth / 2, viewHeight / 2, 50);
         }
     }
 

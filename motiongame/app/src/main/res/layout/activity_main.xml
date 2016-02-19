@@ -14,17 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Score: 0"
-        android:id="@+id/score"
-        android:textColor="#FFFFFF"
-        android:layout_alignTop="@+id/drawingView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Timer: 0"
         android:id="@+id/timer"
         android:textColor="#FFFFFF"
@@ -40,6 +29,18 @@
         android:layout_height="wrap_content"
         android:text="Start"
         android:id="@+id/start"
-        android:layout_gravity="left|bottom" />
+        android:layout_gravity="center_horizontal|bottom" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Score: 0"
+        android:id="@+id/score"
+        android:textColor="#FFFFFF"
+        android:layout_alignTop="@+id/drawingView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="left|top" />
 
 </FrameLayout>
