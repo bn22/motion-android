@@ -1,6 +1,11 @@
 package edu.uw.bn22.motiongame;
 
 import android.app.Activity;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.os.Bundle;
@@ -9,13 +14,18 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SensorEventListener{
 
     private static final String TAG = "**MOTION**";
 
     private DrawingSurfaceView view;
 
     private GestureDetectorCompat mDetector;
+
+    private SensorManager mSensorManager;
+
+    private Sensor mAccelerometer;
+
 
 
     @Override
@@ -26,6 +36,15 @@ public class MainActivity extends Activity {
         view = (DrawingSurfaceView)findViewById(R.id.drawingView);
 
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        if(mAccelerometer == null) { //we don't have one
+            Log.v(TAG, "No accelerometer");
+            finish();
+        }
+
     }
 
 
@@ -34,9 +53,8 @@ public class MainActivity extends Activity {
         Log.v(TAG, "" + event);
 
         boolean gesture = mDetector.onTouchEvent(event);
+
         if(gesture) return true;
-
-
         int action = MotionEventCompat.getActionMasked(event);
 
         switch(action){
@@ -68,6 +86,41 @@ public class MainActivity extends Activity {
             default:
                 return super.onTouchEvent(event);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        //register sensor
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        //unregister sensor
+        mSensorManager.unregisterListener(this, mAccelerometer);
+        super.onPause();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if(Math.abs(event.values[0]) > 2.0){
+            Log.v(TAG, "Shook left: "+event.values[0]);
+            view.ball.dx = 10 * event.values[0];
+        }
+        else if(Math.abs(event.values[0]) < -2.0){
+            Log.v(TAG, "Shook Right: " +event.values[0]);
+            view.ball.dx = -10 * event.values[0];
+        }
+        else if(Math.abs(event.values[1]) > 2.0){
+            Log.v(TAG, "Shook up: "+event.values[1]);
+            view.ball.dy = -10 * event.values[0];
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {

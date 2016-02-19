@@ -30,14 +30,9 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private Thread mThread; //the background thread
 
     private Paint redPaint; //drawing variables (pre-defined for speed)
-    private Paint bluePaint;
-    private Paint greenPaint;
 
+    //the Ball; public for allowing interactions
     public Ball ball;
-    public int count = 0;
-
-    public float a;
-    public float b;
 
     /**
      * We need to override all the constructors, since we don't know which will be called
@@ -65,17 +60,18 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         redPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         redPaint.setColor(Color.RED);
 
-        ball = new Ball(100, 100, 100);
+        //The Ball
+        ball = new Ball(100,100,100);
+        //ball.dx = 1;
     }
 
 
     /**
-     * Helper method for the "game loop"
+     * Helper method for the "animation loop"
      */
     public void update(){
-        //update the "game state" here (move things around, etc.
-        //TODO: fill in your own logic here!
-        ball.cx += ball.dx;
+
+        ball.cx += ball.dx; //move
         ball.cy += ball.dy;
 
         //slow down
@@ -112,40 +108,15 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
      */
     public void render(Canvas canvas){
         if(canvas == null) return; //if we didn't get a valid canvas for whatever reason
-        Random r = new Random();
-        if (count == 0) {
-            a = r.nextFloat() * 4f;
-            b = r.nextFloat() * 4f;
-        }
-        count = count + 1;
-        //TODO: replace the below example with your own rendering
 
         canvas.drawColor(Color.BLACK); //black out the background
-        canvas.drawCircle(viewWidth / 2.0f, viewHeight / 2.0f, 100.0f, redPaint); //we can draw directly onto the canvas
-        canvas.drawCircle(viewWidth / a, viewHeight / b, 25.0f, redPaint); //we can draw directly onto the canvas
 
-        if (count == 60) {
-            int min = 40;
-            int maxHeight = viewHeight - 40;
-            int maxWidth = viewWidth - 40;
-            int w = r.nextInt(maxWidth - min) + min;
-            int h = r.nextInt(maxHeight - min) + min;
-
-            for (int x = w; x < w + 40; x++) { //most of the width
-                for (int y = h; y < h + 40; y++) { //10 pixels high
-                    bmp.setPixel(x, y, Color.BLUE); //we can also set individual pixels in a Bitmap (like a BufferedImage)
-                }
-            }
-            count = 0;
-        }
-        canvas.drawBitmap(bmp, 0, 0, redPaint);
-
+        canvas.drawCircle(ball.cx, ball.cy, ball.radius, redPaint); //we can draw directly onto the canvas
     }
 
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
         // create thread only; it's started in surfaceCreated()
         Log.v(TAG, "making new thread");
         mThread = new Thread(mRunnable);
@@ -160,6 +131,9 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             viewWidth = width;
             viewHeight = height;
             bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888); //new buffer to draw on
+
+            //Remake ball
+            ball = new Ball(viewWidth/2, viewHeight/2, 100);
         }
     }
 
