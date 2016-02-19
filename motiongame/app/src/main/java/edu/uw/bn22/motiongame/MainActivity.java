@@ -133,8 +133,8 @@ public class MainActivity extends Activity implements SensorEventListener{
 
         soundIds[0] = mSoundPool.load(this, R.raw.loz, 0); //Add Sound
         soundIds[1] = mSoundPool.load(this, R.raw.oracle, 0); //Start Game
-        soundIds[2] = mSoundPool.load(this, R.raw.saber_swing2, 0);
-        soundIds[3] = mSoundPool.load(this, R.raw.saber_swing3, 0);
+        soundIds[2] = mSoundPool.load(this, R.raw.la_link_throw, 0); // Collision Sound
+        soundIds[3] = mSoundPool.load(this, R.raw.la_fanfare_item, 0); // Finish Song
         soundIds[4] = mSoundPool.load(this, R.raw.saber_swing4, 0);
     }
 
