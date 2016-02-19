@@ -44,6 +44,9 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     public float height;
     public float width;
 
+    public boolean collide;
+    public boolean end;
+
     /**
      * We need to override all the constructors, since we don't know which will be called
      */
@@ -113,12 +116,14 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             if (player.cx > currBall.cx - currBall.radius && player.cx < currBall.cx + currBall.radius &&
                     player.cy > currBall.cy - currBall.radius && player.cy < currBall.cy + currBall.radius) {
                 player = new Ball(viewWidth / 2, viewHeight, 10);
+                collide = true;
             }
         }
 
         //Checks if the user has finished the game
         if (player.cy < 50f) {
-            //Toast.makeText(getContext(), "You have won", Toast.LENGTH_SHORT).show();
+            end = true;
+            player = new Ball(viewWidth/ 2, viewHeight, 10);
         }
     }
 

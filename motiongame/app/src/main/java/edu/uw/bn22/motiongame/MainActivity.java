@@ -195,6 +195,17 @@ public class MainActivity extends Activity implements SensorEventListener{
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor sensor = event.sensor;
+        if (view.collide) {
+            playSound(2);
+            view.collide = false;
+        }
+
+        if (view.end) {
+            playSound(3);
+            Toast.makeText(this, "You have won", Toast.LENGTH_SHORT).show();
+            view.end = false;
+        }
+
         if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = event.values[0];
             float y = event.values[1];
