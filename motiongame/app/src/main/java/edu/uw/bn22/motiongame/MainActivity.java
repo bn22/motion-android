@@ -44,11 +44,23 @@ public class MainActivity extends Activity implements SensorEventListener{
         view = (DrawingSurfaceView)findViewById(R.id.drawingView);
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (mAccelerometer == null) {
             finish();
         }
         initializeSoundPool();
+
+        //Starts the game with 15 enemies
+        for (int i = 0; i < 15; i++) {
+            float a = r.nextFloat() * (550f - 0f);
+            float b = r.nextFloat() * (650f - 100f) + 100f;
+            while (a - 15f < 0f || a + 15f > 550f || b - 15f < 100f || b + 15f > 650f) {
+                a = r.nextFloat() * (550f - 0f);
+                b = r.nextFloat() * (650f - 100f) + 100f;
+            }
+            Ball obstacle = new Ball(a, b, 15);
+            view.ballArray.add(obstacle);
+        }
     }
 
     //Full screens the application
@@ -129,7 +141,11 @@ public class MainActivity extends Activity implements SensorEventListener{
                 Log.v(TAG, "Finger up!");
                 float x = r.nextFloat() * (550f - 0f);
                 float y = r.nextFloat() * (650f - 100f) + 100f;
-                Ball obstacle = new Ball(x, y, 10);
+                while (x - 15f < 0f || x + 15f > 550f || y - 15f < 100f || y + 15f > 650f) {
+                    x = r.nextFloat() * (550f - 0f);
+                    y = r.nextFloat() * (650f - 100f) + 100f;
+                }
+                Ball obstacle = new Ball(x, y, 15);
                 view.ballArray.add(obstacle);
                 return true;
             default:

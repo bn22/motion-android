@@ -11,16 +11,13 @@ The below questions should be answered regarding your submission!
 
 
 ##### What model device did you test your application on? What SDK did you target? #####
-> Answer goes here!
-
+> Google Nexus 6P and Samsung Galaxy S2. The SDK that we targeted was Android 4.0.3 IceCreamSandwich target version 21
 
 ##### Approximately how many hours did it take you to complete this assignment? #####
-> Answer goes here!
-
+About 7-8 hours
 
 ##### Did you receive help from any other sources (classmates, etc)? If so, please list who (be specific!). #####
-> Answer goes here!
-
+Ivy Wong and Bruce Ng partner assignment
 
 ##### Did you encounter any problems in this assignment we should warn students about in the future? How can we make the assignment better? #####
-> Answer goes here!
+We found out that one tablet didn't have access to some motion device. As result, it would always crash

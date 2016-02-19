@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -84,7 +85,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         cyanPaint.setColor(Color.CYAN);
         paintArray.add(cyanPaint);
 
-        player = new Ball(100, 150, 15);
+        player = new Ball(100, 150, 10);
     }
 
     /**
@@ -115,12 +116,21 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         }
 
         for (int i = 0; i < ballArray.size(); i++) {
-            int a = (int) Math.ceil(player.cx) + (int) Math.ceil(player.radius) ;
-            int b = (int) Math.ceil(ballArray.get(i).cx) + (int) Math.ceil(ballArray.get(i).radius);
-            int c = (int) Math.ceil(player.cy) + (int) Math.ceil(player.radius);
-            int d = (int) Math.ceil(ballArray.get(i).cy) + (int) Math.ceil(ballArray.get(i).radius);
-            if (a - b < 0 || c - d < 0 || b - a < 0 || d - c < 0) {
-                Log.v(TAG, "Collision Woot");
+            int a = (int) Math.ceil(player.cx); //+ (int) Math.ceil(player.radius) ;
+            int b = (int) Math.ceil(ballArray.get(i).cx); //+ (int) Math.ceil(ballArray.get(i).radius);
+            int c = (int) Math.ceil(player.cy); //+ (int) Math.ceil(player.radius);
+            int d = (int) Math.ceil(ballArray.get(i).cy); //+ (int) Math.ceil(ballArray.get(i).radius);
+            if (a + 3 > b) {
+                Log.v(TAG, "First");
+                if (a - 3 <= b) {
+                    Log.v(TAG, "Second");
+                    if (c + 3 > d) {
+                        Log.v(TAG, "Third");
+                        if (c - 3 <= d) {
+                            Log.v(TAG, "Fourth");
+                        }
+                    }
+                }
             }
         }
     }
@@ -161,7 +171,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             viewHeight = height;
             bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888); //new buffer to draw on
 
-            player = new Ball(viewWidth / 2, viewHeight, 15);
+            player = new Ball(viewWidth / 2, viewHeight, 10);
         }
     }
 
