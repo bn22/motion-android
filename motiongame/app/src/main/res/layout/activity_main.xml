@@ -10,37 +10,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start"
-        android:id="@+id/start"
-        android:layout_gravity="center_horizontal|bottom" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Score: 0"
-        android:id="@+id/score"
-        android:textColor="#FFFFFF"
-        android:layout_alignTop="@+id/drawingView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_gravity="left|bottom" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Timer: 0"
-        android:id="@+id/timer"
-        android:textColor="#FFFFFF"
-        android:layout_alignTop="@+id/drawingView"
-        android:layout_alignRight="@+id/drawingView"
-        android:layout_alignEnd="@+id/drawingView"
-        android:layout_marginRight="42dp"
-        android:layout_marginEnd="42dp"
-        android:layout_gravity="right|bottom" />
-
 </FrameLayout>

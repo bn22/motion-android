@@ -34,21 +34,17 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private Paint bluePaint;
     private Paint greenPaint;
     private Paint yellowPaint;
+    private Paint cyanPaint;
+    private Random r = new Random();
 
     public Ball player;
-    public Ball avoid;
-    public Ball collect;
-    public ArrayList<Ball> collectArray = new ArrayList<Ball>();
-    public ArrayList<Ball> avoidArray = new ArrayList<Ball>();;
-
-    public int timer = 0;
+    public ArrayList<Paint> paintArray = new ArrayList<Paint>();
+    public ArrayList<Ball> ballArray = new ArrayList<Ball>();
 
     public float a;
     public float b;
     public float c;
     public float d;
-
-    public boolean start = true;
 
     /**
      * We need to override all the constructors, since we don't know which will be called
@@ -77,13 +73,18 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         redPaint.setColor(Color.RED);
         bluePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         bluePaint.setColor(Color.BLUE);
+        paintArray.add(bluePaint);
         greenPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         greenPaint.setColor(Color.GREEN);
+        paintArray.add(greenPaint);
         yellowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         yellowPaint.setColor(Color.YELLOW);
-        player = new Ball(75, 75, 50);
-        avoid = new Ball(75, 75, 25);
-        collect = new Ball(25, 25, 25);
+        paintArray.add(yellowPaint);
+        cyanPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        cyanPaint.setColor(Color.CYAN);
+        paintArray.add(cyanPaint);
+
+        player = new Ball(100, 150, 15);
     }
 
     /**
@@ -102,42 +103,24 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         /* hit detection */
         if(player.cx + player.radius > viewWidth) { //left bound
             player.cx = viewWidth - player.radius;
-            player.dx *= -1;
         }
         else if(player.cx - player.radius < 0) { //right bound
             player.cx = player.radius;
-            player.dx *= -1;
         }
         else if(player.cy + player.radius > viewHeight) { //bottom bound
             player.cy = viewHeight - player.radius;
-            player.dy *= -1;
         }
         else if(player.cy - player.radius < 0) { //top bound
             player.cy = player.radius;
-            player.dy *= -1;
         }
 
-        for(Ball ball : avoidArray) {
-            ball.cx += ball.dx;
-            ball.cy += ball.dy;
-
-            //slow down
-            ball.dx *= 0.99;
-            ball.dy *= 0.99;
-
-            /* hit detection */
-            if (ball.cx + ball.radius > viewWidth) { //left bound
-                ball.cx = viewWidth - ball.radius;
-                ball.dx *= -1;
-            } else if (ball.cx - ball.radius < 0) { //right bound
-                ball.cx = ball.radius;
-                ball.dx *= -1;
-            } else if (ball.cy + ball.radius > viewHeight) { //bottom bound
-                ball.cy = viewHeight - ball.radius;
-                ball.dy *= -1;
-            } else if (ball.cy - ball.radius < 0) { //top bound
-                ball.cy = ball.radius;
-                ball.dy *= -1;
+        for (int i = 0; i < ballArray.size(); i++) {
+            int a = (int) Math.ceil(player.cx) + (int) Math.ceil(player.radius) ;
+            int b = (int) Math.ceil(ballArray.get(i).cx) + (int) Math.ceil(ballArray.get(i).radius);
+            int c = (int) Math.ceil(player.cy) + (int) Math.ceil(player.radius);
+            int d = (int) Math.ceil(ballArray.get(i).cy) + (int) Math.ceil(ballArray.get(i).radius);
+            if (a - b < 0 || c - d < 0 || b - a < 0 || d - c < 0) {
+                Log.v(TAG, "Collision Woot");
             }
         }
     }
@@ -152,14 +135,10 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         if(canvas == null) return; //if we didn't get a valid canvas for whatever reason
 
         //TODO: replace the below example with your own rendering
-
         canvas.drawColor(Color.BLACK); //black out the background
         canvas.drawCircle(player.cx, player.cy, player.radius, bluePaint); //we can draw directly onto the canvas
-        for (int i = 0; i < avoidArray.size(); i++) {
-            canvas.drawCircle(avoidArray.get(i).cx, avoidArray.get(i).cy, 25, redPaint); //we can draw directly onto the canvas
-        }
-        for (int j = 0; j < collectArray.size(); j++) {
-            canvas.drawCircle(collectArray.get(j).cx, collectArray.get(j).cy, 25, yellowPaint); //we can draw directly onto the canvas
+        for(int i = 0; i < ballArray.size(); i++) {
+            canvas.drawCircle(ballArray.get(i).cx, ballArray.get(i).cy, ballArray.get(i).radius, redPaint);
         }
         canvas.drawBitmap(bmp, 0, 0, null);
     }
@@ -182,7 +161,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             viewHeight = height;
             bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888); //new buffer to draw on
 
-            player = new Ball(viewWidth / 2, viewHeight / 2, 50);
+            player = new Ball(viewWidth / 2, viewHeight, 15);
         }
     }
 

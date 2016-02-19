@@ -33,6 +33,7 @@ public class MainActivity extends Activity implements SensorEventListener{
     private SoundPool mSoundPool;
     private int[] soundIds;
     private boolean[] loadedSound;
+    private Random r = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +49,6 @@ public class MainActivity extends Activity implements SensorEventListener{
             finish();
         }
         initializeSoundPool();
-
-        //Creates a listening for a button that starts the game
-        Button start = (Button)findViewById(R.id.start);
-        start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Random r = new Random();
-                for (int i = 0; i < 5; i++) {
-                    view.collectArray.add(new Ball(r.nextInt(1000), r.nextInt(100), 50));
-                    view.avoidArray.add(new Ball(r.nextInt(1000), r.nextInt(100), 50));
-                }
-                playSound(2);
-            }
-        });
     }
 
     //Full screens the application
@@ -83,7 +70,6 @@ public class MainActivity extends Activity implements SensorEventListener{
     @SuppressWarnings("deprecation")
     private void initializeSoundPool(){
         final int MAX_STREAMS = 4;
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes attribs = new AudioAttributes.Builder()
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -141,20 +127,10 @@ public class MainActivity extends Activity implements SensorEventListener{
         switch(action){
             case MotionEvent.ACTION_UP:
                 Log.v(TAG, "Finger up!");
-                Random r = new Random();
-                int ran = r.nextInt(2);
-                if (view.player.radius == 50) {
-                    if (ran == 0) {
-                        view.player.radius = 25;
-                        Toast.makeText(getApplicationContext(), "Player Size Smaller", Toast.LENGTH_SHORT).show();
-                    } else if (ran == 1) {
-                        view.player.radius = 75;
-                        Toast.makeText(getApplicationContext(), "Player Size Larger", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    view.player.radius = 50;
-                    Toast.makeText(getApplicationContext(), "Player Size Normal", Toast.LENGTH_SHORT).show();
-                }
+                float x = r.nextFloat() * (550f - 0f);
+                float y = r.nextFloat() * (650f - 100f) + 100f;
+                Ball obstacle = new Ball(x, y, 10);
+                view.ballArray.add(obstacle);
                 return true;
             default:
                 return super.onTouchEvent(event);
@@ -180,7 +156,7 @@ public class MainActivity extends Activity implements SensorEventListener{
     //
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(Math.abs(event.values[0]) > 2.0){
+        /*if(Math.abs(event.values[0]) > 2.0){
             Log.v(TAG, "Shook left: "+event.values[0]);
             view.player.dx = 10 * event.values[0];
             view.player.dy = 10 * event.values[0];
@@ -189,7 +165,13 @@ public class MainActivity extends Activity implements SensorEventListener{
             Log.v(TAG, "Shook up: "+event.values[1]);
             view.player.dx = -10 * event.values[0];
             view.player.dy = -10 * event.values[0];
-        }
+        }*/
+        float x = event.values[0];
+        float y = event.values[1];
+
+        Ball ball = view.player;
+        ball.dx = x * -15;
+        ball.dy = y * 10;
     }
 
     @Override
