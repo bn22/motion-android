@@ -124,8 +124,10 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         }
 
         for (int i = 0; i < ballArray.size(); i++) {
-            if ((player.cx - player.radius - ballArray.get(i).cx - ballArray.get(i).radius) < 0 && (player.cy - player.radius - ballArray.get(i).cy - ballArray.get(i).radius < 0)) {
-                //Log.v(TAG, "hi");
+            Ball currBall = ballArray.get(i);
+            if (player.cx > currBall.cx - currBall.radius && player.cx < currBall.cx + currBall.radius &&
+                    player.cy > currBall.cy - currBall.radius && player.cy < currBall.cy + currBall.radius) {
+                Log.v(TAG, "hi");
             }
         }
     }
@@ -142,7 +144,6 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         //TODO: replace the below example with your own rendering
         canvas.drawColor(Color.BLACK); //black out the background
         canvas.drawCircle(player.cx, player.cy, player.radius, bluePaint); //we can draw directly onto the canvas
-        canvas.drawRect(0f, height, width, height - 20f, redPaint);
         for(int i = 0; i < ballArray.size(); i++) {
             canvas.drawCircle(ballArray.get(i).cx, ballArray.get(i).cy, ballArray.get(i).radius, redPaint);
         }
