@@ -39,6 +39,10 @@ public class MainActivity extends Activity implements SensorEventListener{
 
     private float width;
     private float height;
+    private long lastUpdate = 0;
+    private float last_x;
+    private float last_y;
+    private float last_z;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,7 @@ public class MainActivity extends Activity implements SensorEventListener{
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(this, mAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
         if (mAccelerometer == null) {
             finish();
         }
@@ -186,25 +191,34 @@ public class MainActivity extends Activity implements SensorEventListener{
         super.onPause();
     }
 
-    //
+    //When inputs a motion commad. Movement of the phone will move the character while shaking it will restart the game
     @Override
     public void onSensorChanged(SensorEvent event) {
-        /*if(Math.abs(event.values[0]) > 2.0){
-            Log.v(TAG, "Shook left: "+event.values[0]);
-            view.player.dx = 10 * event.values[0];
-            view.player.dy = 10 * event.values[0];
-        }
-        else if(Math.abs(event.values[1]) > 2.0){
-            Log.v(TAG, "Shook up: "+event.values[1]);
-            view.player.dx = -10 * event.values[0];
-            view.player.dy = -10 * event.values[0];
-        }*/
-        float x = event.values[0];
-        float y = event.values[1];
+        Sensor sensor = event.sensor;
+        if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
 
-        Ball ball = view.player;
-        ball.dx = x * -15;
-        ball.dy = y * 10;
+            Ball ball = view.player;
+            ball.dx = x * -15;
+            ball.dy = y * 10;
+
+            //ShakeActivity that detect's a shake event
+            long curTime = System.currentTimeMillis();
+            if ((curTime - lastUpdate) > 100) {
+                long timeDifference = (curTime - lastUpdate);
+                lastUpdate = curTime;
+                float speed = Math.abs(x + y + z - last_x - last_y - last_z)/ timeDifference * 10000;
+                if (speed > 600) {
+                    view.player = new Ball(width / 2, height, 10);
+                    playSound(1);
+                }
+                last_x = x;
+                last_y = y;
+                last_z = z;
+            }
+        }
     }
 
     @Override

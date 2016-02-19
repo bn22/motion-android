@@ -112,8 +112,13 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             Ball currBall = ballArray.get(i);
             if (player.cx > currBall.cx - currBall.radius && player.cx < currBall.cx + currBall.radius &&
                     player.cy > currBall.cy - currBall.radius && player.cy < currBall.cy + currBall.radius) {
-                Log.v(TAG, "hi");
+                player = new Ball(viewWidth / 2, viewHeight, 10);
             }
+        }
+
+        //Checks if the user has finished the game
+        if (player.cy < 50f) {
+            //Toast.makeText(getContext(), "You have won", Toast.LENGTH_SHORT).show();
         }
     }
 
