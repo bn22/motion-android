@@ -2,6 +2,7 @@ package edu.uw.bn22.motiongame;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,6 +14,7 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
@@ -35,6 +37,9 @@ public class MainActivity extends Activity implements SensorEventListener{
     private boolean[] loadedSound;
     private Random r = new Random();
 
+    private float width;
+    private float height;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,13 +55,20 @@ public class MainActivity extends Activity implements SensorEventListener{
         }
         initializeSoundPool();
 
+        //Gets the screen size and turns them into floats
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        width =(float)size.x;
+        height = (float)size.y;
+
         //Starts the game with 15 enemies
         for (int i = 0; i < 15; i++) {
-            float a = r.nextFloat() * (550f - 0f);
-            float b = r.nextFloat() * (650f - 100f) + 100f;
-            while (a - 15f < 0f || a + 15f > 550f || b - 15f < 100f || b + 15f > 650f) {
-                a = r.nextFloat() * (550f - 0f);
-                b = r.nextFloat() * (650f - 100f) + 100f;
+            float a = r.nextFloat() * (width - 0f);
+            float b = r.nextFloat() * (height - 100f) + 100f;
+            while (a - 15f < 0f || a + 15f > width || b - 15f < 100f || b + 15f > width) {
+                a = r.nextFloat() * (height - 0f);
+                b = r.nextFloat() * (width - 100f) + 100f;
             }
             Ball obstacle = new Ball(a, b, 15);
             view.ballArray.add(obstacle);
@@ -139,11 +151,11 @@ public class MainActivity extends Activity implements SensorEventListener{
         switch(action){
             case MotionEvent.ACTION_UP:
                 Log.v(TAG, "Finger up!");
-                float x = r.nextFloat() * (550f - 0f);
-                float y = r.nextFloat() * (650f - 100f) + 100f;
-                while (x - 15f < 0f || x + 15f > 550f || y - 15f < 100f || y + 15f > 650f) {
-                    x = r.nextFloat() * (550f - 0f);
-                    y = r.nextFloat() * (650f - 100f) + 100f;
+                float x = r.nextFloat() * (width - 0f);
+                float y = r.nextFloat() * (height - 100f) + 100f;
+                while (x - 15f < 0f || x + 15f > width || y - 15f < 100f || y + 15f > width) {
+                    x = r.nextFloat() * (height - 0f);
+                    y = r.nextFloat() * (width - 100f) + 100f;
                 }
                 Ball obstacle = new Ball(x, y, 15);
                 view.ballArray.add(obstacle);
