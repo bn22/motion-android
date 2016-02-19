@@ -127,7 +127,7 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         synchronized (mHolder) { //synchronized to keep this stuff atomic
             viewWidth = width;
             viewHeight = height;
-            bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888); //new buffer to draw on
+            bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888); //new buffer to draw on 
 
             //Remake player
             player = new Ball(viewWidth/2, viewHeight/2, 100);
