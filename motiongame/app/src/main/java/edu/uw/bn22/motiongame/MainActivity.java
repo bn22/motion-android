@@ -61,8 +61,8 @@ public class MainActivity extends Activity implements SensorEventListener{
             case MotionEvent.ACTION_DOWN:
                 Log.v(TAG,"Finger down!");
                 //shold be synchronized!
-                view.ball.cx = event.getX();
-                view.ball.cy = event.getY();
+                view.player.cx = event.getX();
+                view.player.cy = event.getY();
                 return true;
             case MotionEvent.ACTION_UP:
                 Log.v(TAG, "Finger up!");
@@ -76,8 +76,8 @@ public class MainActivity extends Activity implements SensorEventListener{
 
             case MotionEvent.ACTION_MOVE:
                 //shold be synchronized!
-//                view.ball.cx = event.getX();
-//                view.ball.cy = event.getY();
+//                view.player.cx = event.getX();
+//                view.player.cy = event.getY();
 
                 //event.findPointerIndex(mSecondPointerId)
                 //respond to second finger
@@ -106,15 +106,13 @@ public class MainActivity extends Activity implements SensorEventListener{
     public void onSensorChanged(SensorEvent event) {
         if(Math.abs(event.values[0]) > 2.0){
             Log.v(TAG, "Shook left: "+event.values[0]);
-            view.ball.dx = 10 * event.values[0];
-        }
-        else if(Math.abs(event.values[0]) < -2.0){
-            Log.v(TAG, "Shook Right: " +event.values[0]);
-            view.ball.dx = -10 * event.values[0];
+            view.player.dx = 10 * event.values[0];
+            view.player.dy = 10 * event.values[0];
         }
         else if(Math.abs(event.values[1]) > 2.0){
             Log.v(TAG, "Shook up: "+event.values[1]);
-            view.ball.dy = -10 * event.values[0];
+            view.player.dx = -10 * event.values[0];
+            view.player.dy = -10 * event.values[0];
         }
     }
 
@@ -137,8 +135,8 @@ public class MainActivity extends Activity implements SensorEventListener{
 
             //fling!
             Log.v(TAG, "Fling! "+ velocityX + ", " + velocityY);
-            view.ball.dx = -1*velocityX*scaleFactor;
-            view.ball.dy = -1*velocityY*scaleFactor;
+            view.player.dx = -1*velocityX*scaleFactor;
+            view.player.dy = -1*velocityY*scaleFactor;
 
             return true; //we got this
         }

@@ -27,6 +27,7 @@ public class DrawingView extends View {
     public Ball ball;
 
 
+
     /**
      * We need to override all the constructors, since we don't know which will be called
      * All the constructors eventually call init()
