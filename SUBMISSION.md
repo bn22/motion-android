@@ -4,7 +4,7 @@ The below questions should be answered regarding your submission!
 
 ##### Give a 1-2 sentence explanation/pitch of your game! How would you "advertise" it on the Play Store (or similar storefront)? #####
 > Answer goes here!
-
+Our game's purpose is for the user to try to navigate the blue ball between the red balls to get from one end of the screen to another. 
 
 ##### Be sure and cite the sources for any visual or audio assets you used here! #####
 > Answer goes here!
