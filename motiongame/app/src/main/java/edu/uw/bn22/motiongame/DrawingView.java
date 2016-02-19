@@ -25,7 +25,6 @@ public class DrawingView extends View {
     //drawing values
     private Paint redPaint; //drawing variables (pre-defined for speed)
 
-
     /**
      * We need to override all the constructors, since we don't know which will be called
      * All the constructors eventually call init()
@@ -73,7 +72,7 @@ public class DrawingView extends View {
         super.onDraw(canvas); //make sure to have the parent do any drawing it is supposed to!
 
         canvas.drawColor(Color.BLACK); //black out the background
-        canvas.drawCircle(viewWidth/2, viewHeight/2, 100f, redPaint); //we can draw directly onto the canvas
-    }
+        canvas.drawCircle(viewWidth /2, viewHeight /2, 100, redPaint); //we can draw directly onto the canvas
+        canvas.drawBitmap(bmp, 0, 0, null);    }
 
 }

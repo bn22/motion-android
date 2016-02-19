@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -32,12 +33,22 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private Paint redPaint; //drawing variables (pre-defined for speed)
     private Paint bluePaint;
     private Paint greenPaint;
+    private Paint yellowPaint;
 
-    public Ball ball;
-    public int count = 0;
+    public Ball player;
+    public Ball avoid;
+    public Ball collect;
+    public ArrayList<Ball> collectArray = new ArrayList<Ball>();
+    public ArrayList<Ball> avoidArray = new ArrayList<Ball>();;
+
+    public int timer = 0;
 
     public float a;
     public float b;
+    public float c;
+    public float d;
+
+    public boolean start = true;
 
     /**
      * We need to override all the constructors, since we don't know which will be called
@@ -64,8 +75,15 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         //set up drawing variables ahead of timme
         redPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         redPaint.setColor(Color.RED);
-
-        ball = new Ball(100, 100, 100);
+        bluePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        bluePaint.setColor(Color.BLUE);
+        greenPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        greenPaint.setColor(Color.GREEN);
+        yellowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        yellowPaint.setColor(Color.YELLOW);
+        player = new Ball(75, 75, 75);
+        avoid = new Ball(75, 75, 50);
+        collect = new Ball(25, 25, 50);
     }
 
 
@@ -73,35 +91,55 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
      * Helper method for the "game loop"
      */
     public void update(){
-        //update the "game state" here (move things around, etc.
+        //update the "game state" here (move things around, etc).
         //TODO: fill in your own logic here!
-        ball.cx += ball.dx;
-        ball.cy += ball.dy;
+        player.cx += player.dx;
+        player.cy += player.dy;
 
         //slow down
-        ball.dx *= 0.99;
-        ball.dy *= 0.99;
-
-//        if(ball.dx < 1) ball.dx = 0;
-//        if(ball.dy < 1) ball.dy = 0;
-
+        player.dx *= 0.99;
+        player.dy *= 0.99;
 
         /* hit detection */
-        if(ball.cx + ball.radius > viewWidth) { //left bound
-            ball.cx = viewWidth - ball.radius;
-            ball.dx *= -1;
+        if(player.cx + player.radius > viewWidth) { //left bound
+            player.cx = viewWidth - player.radius;
+            player.dx *= -1;
         }
-        else if(ball.cx - ball.radius < 0) { //right bound
-            ball.cx = ball.radius;
-            ball.dx *= -1;
+        else if(player.cx - player.radius < 0) { //right bound
+            player.cx = player.radius;
+            player.dx *= -1;
         }
-        else if(ball.cy + ball.radius > viewHeight) { //bottom bound
-            ball.cy = viewHeight - ball.radius;
-            ball.dy *= -1;
+        else if(player.cy + player.radius > viewHeight) { //bottom bound
+            player.cy = viewHeight - player.radius;
+            player.dy *= -1;
         }
-        else if(ball.cy - ball.radius < 0) { //top bound
-            ball.cy = ball.radius;
-            ball.dy *= -1;
+        else if(player.cy - player.radius < 0) { //top bound
+            player.cy = player.radius;
+            player.dy *= -1;
+        }
+
+        for(Ball ball : avoidArray) {
+            ball.cx += ball.dx;
+            ball.cy += ball.dy;
+
+            //slow down
+            ball.dx *= 0.99;
+            ball.dy *= 0.99;
+
+            /* hit detection */
+            if (ball.cx + ball.radius > viewWidth) { //left bound
+                ball.cx = viewWidth - ball.radius;
+                ball.dx *= -1;
+            } else if (ball.cx - ball.radius < 0) { //right bound
+                ball.cx = ball.radius;
+                ball.dx *= -1;
+            } else if (ball.cy + ball.radius > viewHeight) { //bottom bound
+                ball.cy = viewHeight - ball.radius;
+                ball.dy *= -1;
+            } else if (ball.cy - ball.radius < 0) { //top bound
+                ball.cy = ball.radius;
+                ball.dy *= -1;
+            }
         }
     }
 
@@ -111,35 +149,20 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
      * @param canvas The canvas to draw on
      */
     public void render(Canvas canvas){
+
         if(canvas == null) return; //if we didn't get a valid canvas for whatever reason
-        Random r = new Random();
-        if (count == 0) {
-            a = r.nextFloat() * 4f;
-            b = r.nextFloat() * 4f;
-        }
-        count = count + 1;
+
         //TODO: replace the below example with your own rendering
 
         canvas.drawColor(Color.BLACK); //black out the background
-        canvas.drawCircle(viewWidth / 2.0f, viewHeight / 2.0f, 100.0f, redPaint); //we can draw directly onto the canvas
-        canvas.drawCircle(viewWidth / a, viewHeight / b, 25.0f, redPaint); //we can draw directly onto the canvas
-
-        if (count == 60) {
-            int min = 40;
-            int maxHeight = viewHeight - 40;
-            int maxWidth = viewWidth - 40;
-            int w = r.nextInt(maxWidth - min) + min;
-            int h = r.nextInt(maxHeight - min) + min;
-
-            for (int x = w; x < w + 40; x++) { //most of the width
-                for (int y = h; y < h + 40; y++) { //10 pixels high
-                    bmp.setPixel(x, y, Color.BLUE); //we can also set individual pixels in a Bitmap (like a BufferedImage)
-                }
-            }
-            count = 0;
+        canvas.drawCircle(player.cx, player.cy, player.radius, bluePaint); //we can draw directly onto the canvas
+        for (int i = 0; i < avoidArray.size(); i++) {
+            canvas.drawCircle(avoidArray.get(i).cx, avoidArray.get(i).cy, 50, redPaint); //we can draw directly onto the canvas
         }
-        canvas.drawBitmap(bmp, 0, 0, redPaint);
-
+        for (int j = 0; j < collectArray.size(); j++) {
+            canvas.drawCircle(collectArray.get(j).cx, collectArray.get(j).cy, 50, yellowPaint); //we can draw directly onto the canvas
+        }
+        canvas.drawBitmap(bmp, 0, 0, null);
     }
 
 
@@ -151,7 +174,6 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         mThread = new Thread(mRunnable);
         mRunnable.setRunning(true); //turn on the runner
         mThread.start(); //start up the thread when surface is created
-
     }
 
     @Override
@@ -160,6 +182,8 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             viewWidth = width;
             viewHeight = height;
             bmp = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888); //new buffer to draw on
+
+            player = new Ball(viewWidth / 2, viewHeight / 2, 100);
         }
     }
 
@@ -179,9 +203,6 @@ public class DrawingSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         }
         Log.d(TAG, "Drawing thread shut down.");
     }
-
-
-
 
     /**
      * An inner class representing a runnable that does the drawing. Animation timing could go in here.

@@ -1,19 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.uw.bn22.motiongame.MainActivity">
 
     <view class="edu.uw.bn22.motiongame.DrawingSurfaceView"
         android:id="@+id/drawingView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Score: 0"
+        android:id="@+id/score"
+        android:textColor="#FFFFFF"
+        android:layout_alignTop="@+id/drawingView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
-</RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Timer: 0"
+        android:id="@+id/timer"
+        android:textColor="#FFFFFF"
+        android:layout_alignTop="@+id/drawingView"
+        android:layout_alignRight="@+id/drawingView"
+        android:layout_alignEnd="@+id/drawingView"
+        android:layout_marginRight="42dp"
+        android:layout_marginEnd="42dp"
+        android:layout_gravity="right|top" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:id="@+id/start"
+        android:layout_gravity="left|bottom" />
+
+</FrameLayout>
